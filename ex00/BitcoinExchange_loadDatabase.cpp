@@ -6,7 +6,8 @@ void BitcoinExchange::loadDatabase(std::string const & databaseFile)
 {
 	std::string		line;
 	std::string		date;
-	std::string		price;
+	std::string		priceStr;
+	flaot			price;
 
 	std::ifstream	file(databaseFile.str());
 	if (!file.is_open())
@@ -20,8 +21,15 @@ void BitcoinExchange::loadDatabase(std::string const & databaseFile)
 		if (commaPos == std::string::nopos)
 			continue;
 		date = line.substr(0, commaPos);
-		price = line.substr(commaPos + 1);
+		priceStr = line.substr(commaPos + 1);
+		date = trim(date);
+		priceStr = trim(priceStr;
 
-
+		try {
+			price = std::stof(priceStr);
+			this->rates_[date] = price;
+		}
+		catch {
+			continue ;
 
 
