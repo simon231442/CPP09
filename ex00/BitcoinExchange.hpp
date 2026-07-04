@@ -5,8 +5,19 @@
 # include <string>
 
 class BitcoinExchange {
+public:
+	typedef std::map<std::string, float>	PriceDatabase;
+
+	BitcoinExchange();
+	BitcoinExchange(const BitcoinExchange &rhs);
+	~BitcoinExchange();
+	BitcoinExchange&						operator=(const BitcoinExchange &rhs);
+
+	void loadDatabase(const std::string &databaseFile);
+	void processInput(const std::string &inputFile) const;
+
 private:
-	PriceDatabase					_rates;
+	PriceDatabase							rates_;
 
 	bool							isValidDate(const std::string &date) const;
 	bool 							isValidValue(const std::string &value) const;
@@ -14,17 +25,6 @@ private:
 	std::string						normalizeDate(const std::string &date) const;
 	PriceDatabase::const_iterator	findClosestRate(const std::string &date) const;
 	void							printConversion(const std::string &date, float value) const;
-
-public:
-	typedef std::map<std::string, float>	PriceDatabase;
-
-	BitcoinExchange();
-	BitcoinExchange(const BitcoinExchange &other);
-	~BitcoinExchange();
-	BitcoinExchange&						operator=(const BitcoinExchange &other);
-
-	void loadDatabase(const std::string &databaseFile);
-	void processInput(const std::string &inputFile) const;
 };
 
 #endif
