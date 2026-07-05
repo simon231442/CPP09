@@ -1,7 +1,5 @@
 #include "BitcoinExchange.hpp"
 #include <fstream>
-#include <stdexcept>
-#include <cstdlib>
 
 void BitcoinExchange::loadDatabase(std::string const & databaseFile) 
 {
