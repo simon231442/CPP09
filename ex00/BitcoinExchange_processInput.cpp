@@ -3,10 +3,12 @@
 
 void	BitcoinExchange::processInput(std::string const & inputFile) const
 {
-	std::ifstream file(inputFile.c_str());
+	std::ifstream	file(inputFile.c_str());
+	std::string		valueStr;
+	std::string		date;
 
 	if (!file.is_open())
-		throw std::runtime_error("Couldn't open the database file");
+		throw std::runtime_error("Couldn't open the inputs file");
 	
 	std::getline(file, line);
 
@@ -16,11 +18,13 @@ void	BitcoinExchange::processInput(std::string const & inputFile) const
 		if (pipePos == std::string::npos)
 			continue;
 		date = line.substr(0, pipePos);
-		priceStr = line.substr(pipePos + 1);
+		valueStr = line.substr(pipePos + 1);
 		date = trim(date);
-		priceStr = trim(priceStr);
+		valueStr = trim(valueStr);
 
 		try {
+			std::cout << this->PriceDatabase[date] * 
+
 
 	
 

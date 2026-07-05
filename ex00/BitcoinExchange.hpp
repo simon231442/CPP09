@@ -3,6 +3,7 @@
 
 # include <map>
 # include <string>
+# include <stdlib>
 
 class BitcoinExchange {
 public:
@@ -19,7 +20,7 @@ public:
 private:
 	PriceDatabase							rates_;
 
-	bool							isValidDate(const std::string &date) const;
+	bool							dateIsValid(const std::string &date) const;
 	bool 							isValidValue(const std::string &value) const;
 	std::string						trim(const std::string &text) const;
 	std::string						normalizeDate(const std::string &date) const;
