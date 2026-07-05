@@ -10,7 +10,7 @@ OBJ_DIR = obj
 #                                SOURCE FILES                                  #
 ################################################################################
 
-SOURCE = BitcoinExchange_constructor.cpp BitcoinExchange_loadDatabase.cpp
+SOURCE = BitcoinExchange_constructor.cpp BitcoinExchange_loadDatabase.cpp BitcoinExchange_dateIsValid.cpp
 
 ################################################################################
 #                             COMPILER OPTIONS                                 #

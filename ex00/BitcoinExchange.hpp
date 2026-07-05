@@ -3,7 +3,8 @@
 
 # include <map>
 # include <string>
-# include <stdlib>
+# include <cstdlib>
+# include <stdexcept>
 
 class BitcoinExchange {
 public:
