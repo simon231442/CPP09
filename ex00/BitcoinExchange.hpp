@@ -22,7 +22,7 @@ private:
 	PriceDatabase							rates_;
 
 	bool							dateIsValid(const std::string &date) const;
-	bool 							isValidValue(const std::string &value) const;
+	bool 							valueIsValid(const std::string &value) const;
 	std::string						trim(const std::string &text) const;
 	std::string						normalizeDate(const std::string &date) const;
 	PriceDatabase::const_iterator	findClosestRate(const std::string &date) const;

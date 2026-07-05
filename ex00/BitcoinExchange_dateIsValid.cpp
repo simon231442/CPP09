@@ -1,6 +1,6 @@
 #include "BitcoinExchange.hpp"
 
-bool		dateIsValid(const std::string &date) const
+bool		BitcoinExchange::dateIsValid(const std::string &date) const
 {
 	int		year, month, day;
 	bool	isLeap;
