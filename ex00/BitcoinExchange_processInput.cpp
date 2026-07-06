@@ -7,6 +7,7 @@ void	BitcoinExchange::processInput(std::string const & inputFile) const
 	std::string		valueStr;
 	std::string		date;
 	float			value;
+	char 			*end;
 
 	if (!file.is_open())
 		throw std::runtime_error("Couldn't open the inputs file");
@@ -32,9 +33,11 @@ void	BitcoinExchange::processInput(std::string const & inputFile) const
 		value = std::strtof(valueStr.c_str(), NULL);
 
 		try {
-			this->printConversion(date, value);
+			this->printConversion(date, *end);
 		}
-		catch (std::exception const e)
+		catch (std::exception const e) {
+			std::cerr << "Error: bad input => " << value << std::endl;
+		}
 
 	
 
