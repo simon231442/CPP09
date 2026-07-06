@@ -1,12 +1,13 @@
 #include "BitcoinExchange.hpp"
 
-bool	BitcoinExchange::ValueIsValid(std::string const & value) const
+bool	BitcoinExchange::valueIsValid(std::string const & value) const
 {
 	size_t		i = 0;
 	bool		hasDecimal = false;
 	char*		end;
+	float		val;
 
-	if (value.is_empty())
+	if (value.empty())
 		return false;
 	
 	if (value[i] == '-')
@@ -28,4 +29,10 @@ bool	BitcoinExchange::ValueIsValid(std::string const & value) const
 
 	if (hasDecimal && (value[0] == '.' || value[value.size() -1]))
 		return false;
+
+	val = strtof(value.c_str(), &end);
+	if (end != &value[value.size()])
+		return false;
 	
+	return (val >= 0 && val <= 1000);
+}

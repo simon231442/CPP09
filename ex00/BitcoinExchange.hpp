@@ -5,6 +5,7 @@
 # include <string>
 # include <cstdlib>
 # include <stdexcept>
+# include <cctype>
 
 class BitcoinExchange {
 public:
