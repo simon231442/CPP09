@@ -3,6 +3,13 @@
 
 void BitcoinExchange::loadDatabase(std::string const & databaseFile) 
 {
+	std::ifstream	file(databaseFile.c_str());
+	if (!file.is_open())
+		throw std::exception;
+
+
+void BitcoinExchange::loadDatabase(std::string const & databaseFile) 
+{
 	std::string		line;
 	std::string		date;
 	std::string		priceStr;
