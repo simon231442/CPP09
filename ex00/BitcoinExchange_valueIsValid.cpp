@@ -2,6 +2,10 @@
 
 bool	BitcoinExchange::valueIsValid(std::string const & value) const
 {
+
+
+bool	BitcoinExchange::valueIsValid(std::string const & value) const
+{
 	size_t		i = 0;
 	bool		hasDecimal = false;
 	char*		end;
