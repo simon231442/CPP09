@@ -4,9 +4,36 @@
 void BitcoinExchange::loadDatabase(std::string const & databaseFile) 
 {
 	std::ifstream					file(databaseFile.c_str());
-	std::istream_iterator<Line>		it(file), end;
 	if (!file.is_open())
 		throw std::exception;
+	std::string;					line_string;
+//	std::istringstream				line_stream;
+	size_t							commaIndex;
+	std::string						date;
+	float							price;
+
+	std::getline(file, line_string);
+	while (!file.eof())
+	{
+		std::getline(file, line_string);
+		//line_stream = line_string;
+		commaIndex = line_string.find(',');
+		if (commaIndex == npos)
+			continue;
+		date = line_string.substr(0, commaIndex);
+		try {
+			price = std::strtof(line_string.substr(commaIndex + 1);
+			this->priceDatabase[date] = price;
+		}
+		catch (std::exception const & e)
+			continue;
+	}
+
+
+
+
+
+
 
 
 void BitcoinExchange::loadDatabase(std::string const & databaseFile) 
@@ -43,3 +70,4 @@ void BitcoinExchange::loadDatabase(std::string const & databaseFile)
 }
 
 
+//2012-07-04,6.71
