@@ -6,28 +6,31 @@ void BitcoinExchange::loadDatabase(std::string const & databaseFile)
 	std::ifstream					file(databaseFile.c_str());
 	if (!file.is_open())
 		throw std::exception;
-	std::string;					line_string;
-//	std::istringstream				line_stream;
+	std::string;					line;
 	size_t							commaIndex;
 	std::string						date;
-	float							price;
+	std::istringstream				price_stream;
+	float							price_float;
 
-	std::getline(file, line_string);
-	while (!file.eof())
+	std::getline(file, line);
+	while (1)
 	{
-		std::getline(file, line_string);
-		//line_stream = line_string;
-		commaIndex = line_string.find(',');
+		std::getline(file, line);
+		if (file.eof())
+			break;
+		commaIndex = line.find(',');
 		if (commaIndex == npos)
 			continue;
-		date = line_string.substr(0, commaIndex);
+		date = line.substr(0, commaIndex);
+		price_stream = line.substr(commaIndex + 1);
 		try {
-			price = std::strtof(line_string.substr(commaIndex + 1);
-			this->priceDatabase[date] = price;
+			price_stream >> price_float;
+			this->priceDatabase[date] = price_float;
 		}
 		catch (std::exception const & e)
 			continue;
 	}
+}
 
 
 

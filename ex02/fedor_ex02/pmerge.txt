@@ -1,0 +1,53 @@
+comment le jacob style marche
+on prend nos nombre
+2, 3, 5, 9, 1, 83, 13, 28
+
+on les met en paire
+[2, 3], [5, 9], [1, 83], [13, 28]
+
+on prend les plus grand de chaque paire
+plus grand
+3, 9, 83, 28
+plus petit
+2, 5, 1, 13
+
+on refait des paires avec les plus grand
+[3, 9], [83, 28]
+
+on reprend les plus grand des paires
+plus grand
+9, 83
+plus petit
+3, 28
+
+on met dans l ordre les plus grand
+9, 83
+
+mtn on prend les 3, 28 et on les places dans 9, 83 on les comparant binairement
+
+on prend le restes 2, 5, 1, 13
+et on les places en comparant binairement
+
+
+On creer des paires jusqu a se que on a que 2 nombres
+qui reste alors a se moment la on les trie et apres on
+commence a ajouter les nombres des dernieres paires qu on ses souvenus
+et on les ajoutes en les comparant binairement?
+
+
+1. on fait des paires, si on a 1 qui reste sans paires on le garde 
+
+2. on trie le grand et le petit de chaque paires
+
+3. on relance l algo avec les gros nombres de chaque paires
+
+
+--------D OU VIENT LE JACOBSTYLE DANS FORD JOHNSON--------
+
+la suite de jacobstyle nous donne le nombre de comparaisont a faire
+pour placer un nombre dans une suite deja trier
+
+elle intervient que au moment d inserer le reste des nombres chez les grands qui sont mis dans l ordre
+
+
+
