@@ -24,11 +24,11 @@ PmergeMe::~PmergeMe()
 
 double PmergeMe::getTimeInUs(struct timeval start, struct timeval end)
 {
-    //on va renvoyer en microsecondes, 1 secondes == 1'000'000 microsecondes
+    // Convertit la difference de temps en microsecondes.
     return (end.tv_sec - start.tv_sec) * 1000000.0 + (end.tv_usec - start.tv_usec);
 }
 
-//cette fonction va remplir notre deq et vector
+// Lit les arguments, les valide, puis remplit le vector et le deque.
 void PmergeMe::parseInput(int argc, char** argv)
 {
     for (int i = 1; i < argc; ++i)
@@ -37,14 +37,14 @@ void PmergeMe::parseInput(int argc, char** argv)
         if (arg.empty())
             throw std::invalid_argument("Error argv est vide");
 
-        //on va se balader dans la string en verifiant chaque char
+        // Chaque caractere doit etre numerique.
         for (size_t j = 0; j < arg.length(); ++j)
         {
             if (!std::isdigit(arg[j]))
                 throw std::invalid_argument("Error");
         }
         long val = std::atol(arg.c_str());
-        //on verifie si le nombre depasse les limites
+        // On refuse les valeurs hors intervalle d'un int signe positif.
         if (val <= 0 || val > 2147483647)
             throw std::invalid_argument("Error");
         _vec.push_back(static_cast<int>(val));
@@ -52,7 +52,7 @@ void PmergeMe::parseInput(int argc, char** argv)
     }
 }
 
-//cette fonction va generer la suite de jacobstahl jusqu a une limite
+// Genere la suite de Jacobsthal jusqu'a la limite demandee.
 std::vector<size_t> PmergeMe::generateJacobsthal(size_t limit)
 {
     std::vector<size_t> jacob;
@@ -72,22 +72,21 @@ std::vector<size_t> PmergeMe::generateJacobsthal(size_t limit)
 
 void PmergeMe::sortVector(std::vector<int>& container)
 {
-    //cassage de recursion
+    // Cas de base : un tableau de taille 0 ou 1 est deja trie.
     if (container.size() <= 1)
         return;
 
-    //si on a pas un nombre de paires
+    // Si le nombre d'elements est impair, on garde le dernier a part.
     bool hasStraggler = (container.size() % 2 != 0);
     int straggler = 0;
     if (hasStraggler != 0)
     {
-        //on prend le dernier nombre et on le supprime
+        // Cet element sera reintegre a la fin par insertion dichotomique.
         straggler = container.back();
         container.pop_back();
     }
 
-    //on va creer nos paires
-    //le plus grand nombre sera le premier elements de la paire
+    // On construit des paires en plaquant le plus grand element en premier.
     std::vector<std::pair<int, int> > pairs;
     for (size_t i = 0; i < container.size(); i += 2)
     {
@@ -98,37 +97,28 @@ void PmergeMe::sortVector(std::vector<int>& container)
     }
 
     //-----------------------------------------------------------
-    //  ici on va creer 2 vector 1 pour les plus grand et l autre pour les plus petit
-    //  les 2 vector vont suivre la suite des plus grand qui seront dans l ordre
-    //  c est pour ca qu on va premierement trier les plus grand
-    //  et apres construire pend pour les plus petit
-    //  en fonction des plus grand
 
-    //on va sortir tout les plus grand dans un vector a part
-
-    //vector pour les grands
+    // On separe les grands elements (main chain) des petits (pend).
+    // La recursion trie d'abord la main chain, puis les petits sont reinsertes.
     std::vector<int> mainChain;
-    //vector pour les petits 
     std::vector<int> pend;
 
-    //on sort les plus grands, comme ils sont les premiers
+    // On extrait tous les grands elements dans une chaine temporaire.
     for (size_t i = 0; i < pairs.size(); ++i)
         mainChain.push_back(pairs[i].first);
 
-    //appelle recursion sur les grand nombres
-    //on va refaire ca tant qu il nous reste pas 1 seule paire
+    // On trie recursivement les grands elements.
     sortVector(mainChain);
 
-    //on va se balader dans les grands
+    // On associe a chaque grand son petit element pour reconstruire pend.
     for (size_t i = 0; i < mainChain.size(); ++i)
     {
-        //on va se balader dans les paires
         for (size_t j = 0; j < pairs.size(); ++j)
         {
-            //on va trouver la paire qui venait avec le grand
+            // On retrouve la paire d'origine grace a la valeur du grand element.
             if (mainChain[i] == pairs[j].first)
             {
-                //on va push le petit dans pend
+                // Le petit element de cette paire va dans pend.
                 pend.push_back(pairs[j].second);
                 pairs.erase(pairs.begin() + j);
                 break;
@@ -141,56 +131,37 @@ void PmergeMe::sortVector(std::vector<int>& container)
         mainChain.insert(mainChain.begin(), pend[0]);
 
     //-----------------------------------------------------------
-    //JACOB STYLE
-    //
-    //jacob style donne la limite ou de combien de comparaison on doit
-    //faire pour rajouter des elements
-    //donc en restant a cette limite    
+    // La suite de Jacobsthal donne l'ordre d'insertion des elements de pend.
+    // L'objectif est de limiter le nombre de comparaisons.
     std::vector<size_t> jacob = generateJacobsthal(pend.size());
     size_t lastIdx = 1;
     //-----------------------------------------------------------
 
-    //Jacob style = 0, 1, 1, 3, 5, 11, 21, 43, 85
     for (size_t i = 1; i < jacob.size(); ++i)
     {
-        //on prend le nombre de jackobstyle
-        //---------------------------------
+        // On prend la derniere position autorisee par Jacobsthal.
         size_t targetIdx = jacob[i] - 1;
         if (targetIdx >= pend.size())
             targetIdx = pend.size() - 1;
-        //---------------------------------
 
-        //on ajoute les nombres en partant de l index de jackobstyle
-        //-------------------------------------------------------------
+        // On insere les elements de pend dans l'ordre inverse du bloc courant.
         for (size_t j = targetIdx; j >= lastIdx; --j)
         {
-            //va renvoyer l iterator du premier elements plus grand que pend[j]
-            //comme mainChain sont dans l ordre ca sera le premier plus grand plus petit nombre
-            //
-            //c est dans lower bound qu on fait le binary search
-            //
-            //BINARY SEARCH :
-            // 
-            //on cherche qqc dans la chaine, on va prendre l elements du milieu on va le comparer a se qu on cherche
-            //en fonction de si c est plus grand ou plus petit
-            //on va enlever la moitier de droite ou de gauche
+            // lower_bound renvoie la premiere position ou pend[j] peut aller
+            // sans casser l'ordre. La recherche est binaire en interne.
             std::vector<int>::iterator it = std::lower_bound(mainChain.begin(), mainChain.end(), pend[j]);
             mainChain.insert(it, pend[j]);
             if (j == lastIdx)
                 break;
         }
-        //-------------------------------------------------------------
 
-        //on prend l index commme ca on sait quand est ce qu on doit s arreter
-        //--------------------------------
+        // On memorise le prochain bloc a traiter.
         lastIdx = targetIdx + 1;
         if (lastIdx >= pend.size())
             break;
-        //--------------------------------
     }
 
-    //si on a le nombre impair qui reste
-    //on va l ajouter de la meme maniere que tout les autres
+    // Si un element impair restait, on l'insere comme les autres.
     if (hasStraggler)
     {
         std::vector<int>::iterator it = std::lower_bound(mainChain.begin(), mainChain.end(), straggler);
@@ -202,12 +173,11 @@ void PmergeMe::sortVector(std::vector<int>& container)
 
 void PmergeMe::sortDeque(std::deque<int>& container)
 {
-    //cassage de recursion
+    // Cas de base : un deque de taille 0 ou 1 est deja trie.
     if (container.size() <= 1)
         return;
 
-    //si on a un nombre impaire
-    //------------------------------------------------
+    // Si le nombre d'elements est impair, on garde le dernier a part.
     bool hasStraggler = (container.size() % 2 != 0);
     int straggler = 0;
     if (hasStraggler) 
@@ -215,10 +185,8 @@ void PmergeMe::sortDeque(std::deque<int>& container)
         straggler = container.back();
         container.pop_back();
     }
-    //------------------------------------------------
 
-    //on creer les paires
-    //----------------------------------------------------------------------
+    // On construit des paires avec le plus grand element en premier.
     std::deque<std::pair<int, int> > pairs;
     for (size_t i = 0; i < container.size(); i += 2)
     {
@@ -227,20 +195,16 @@ void PmergeMe::sortDeque(std::deque<int>& container)
         else
             pairs.push_back(std::make_pair(container[i + 1], container[i]));
     }
-    //----------------------------------------------------------------------
 
-    //on creer la mainChain des paires les plus grand
-    //---------------------------------------------------------------
+    // On isole les grands elements dans mainChain.
     std::deque<int> mainChain;
     for (size_t i = 0; i < pairs.size(); ++i)
         mainChain.push_back(pairs[i].first);
-    //---------------------------------------------------------------
 
-    //appelle recursiv
+    // Tri recursif de la main chain.
     sortDeque(mainChain);
 
-    //creation deque des plus petit
-    //----------------------------------------------------
+    // Reconstruction de pend a partir des paires d'origine.
     std::deque<int> pend;
     for (size_t i = 0; i < mainChain.size(); ++i)
     {
@@ -254,21 +218,18 @@ void PmergeMe::sortDeque(std::deque<int>& container)
             }
         }
     }
-    //----------------------------------------------------
 
 
     if (!pend.empty())
         mainChain.push_front(pend[0]);
 
-    //creation des indexe jacbostyle
+    // Ordre d'insertion guide par la suite de Jacobsthal.
     std::vector<size_t> jacob = generateJacobsthal(pend.size());
     size_t lastIdx = 1;
 
-    //boucle qui va tout coller ensemble
-    //-----------------------------------------------------------------------------------------------
     for (size_t i = 1; i < jacob.size(); ++i)
     {
-        //on met l index
+        // Fin du bloc courant dans pend.
         size_t targetIdx = jacob[i] - 1;
         if (targetIdx >= pend.size())
             targetIdx = pend.size() - 1;
@@ -284,7 +245,6 @@ void PmergeMe::sortDeque(std::deque<int>& container)
         if (lastIdx >= pend.size())
             break;
     }
-    //-----------------------------------------------------------------------------------------------
 
 
     if (hasStraggler)
@@ -298,11 +258,11 @@ void PmergeMe::sortDeque(std::deque<int>& container)
 
 void PmergeMe::run(int argc, char** argv)
 {
-    //on remplit notre classe
+    // Chargement et validation des donnees d'entree.
     parseInput(argc, argv);
 
     std::cout << "Before: ";
-    //on ecrit les nombres de base
+    // Affichage de la sequence initiale.
     for (size_t i = 0; i < _vec.size(); ++i)
         std::cout << _vec[i] << "\n";
     std::cout << std::endl;
@@ -310,26 +270,17 @@ void PmergeMe::run(int argc, char** argv)
     struct timeval start;
     struct timeval end;
 
-    // Vector Sort
-    //-------------------------------------------------------------------
-    //on prend le temps start
+    // Mesure du tri sur vector.
     gettimeofday(&start, NULL);
-    //on sort le vector
     sortVector(_vec);
-    //on prend le temps end
     gettimeofday(&end, NULL);
     double vecTime = getTimeInUs(start, end);
-    //-------------------------------------------------------------------
 
-    // Deque Sort
-    //
-    //un deque sera plus long parceque ca memoire est fragmenter dans l ordinateur
-    //-------------------------------------------------------------------
+    // Mesure du tri sur deque.
     gettimeofday(&start, NULL);
     sortDeque(_deq);
     gettimeofday(&end, NULL);
     double deqTime = getTimeInUs(start, end);
-    //-------------------------------------------------------------------
 
     std::cout << "After:  ";
     for (size_t i = 0; i < _vec.size(); ++i)
@@ -341,4 +292,4 @@ void PmergeMe::run(int argc, char** argv)
     std::cout << "Time to process a range of " << _deq.size()
               << " elements with std::deque  : " << deqTime << " us" << std::endl;
 }
-
+//insertion dichotomique
