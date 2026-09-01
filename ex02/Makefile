@@ -10,7 +10,11 @@ OBJ_DIR = obj
 #                                SOURCE FILES                                  #
 ################################################################################
 
-SOURCE = PmergeMe.cpp main.cpp 
+SOURCE = main.cpp,
+		PmergeMe_constructor.cpp,
+		PmergeMe_inputParse.cpp,
+		PmergeMe_vectorToDeque.cpp,
+		PmergeMe_vectorSort.cpp
 
 ################################################################################
 #                             COMPILER OPTIONS                                 #
