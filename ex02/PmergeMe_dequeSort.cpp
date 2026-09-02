@@ -5,27 +5,27 @@
 static int const	jacobsthalSequence[] = {1, 3, 5, 11, 21, 43, 85, 171, 341, 683, 1365, 2731, 5461};
 static size_t const	jacobsthalSequenceSize = sizeof(jacobsthalSequence) / sizeof(jacobsthalSequence[0]);
 
-static int	oddCaseHandle(std::vector<int> & container);
-static std::vector<std::pair<int, int> >	pairsMake(std::vector<int> const & container);
-static std::vector<int>	bigsExtract(std::vector<std::pair<int, int> > const & pairs);
-static std::vector<std::pair<int, int> >	pairsAfterRecursMake(std::vector<int> const & bigs, std::vector<std::pair<int, int> > & pairs);
-static std::vector<size_t>	indexOrderMake(size_t n);
-static size_t	bigCurrentIndexFind(std::vector<int> const & container, int big);
-static void	smallInsert(std::vector<int> & container, int small, size_t bound);
+static int	oddCaseHandle(std::deque<int> & container);
+static std::deque<std::pair<int, int> >	pairsMake(std::deque<int> const & container);
+static std::deque<int>	bigsExtract(std::deque<std::pair<int, int> > const & pairs);
+static std::deque<std::pair<int, int> >	pairsAfterRecursMake(std::deque<int> const & bigs, std::deque<std::pair<int, int> > & pairs);
+static std::deque<size_t>	indexOrderMake(size_t n);
+static size_t	bigCurrentIndexFind(std::deque<int> const & container, int big);
+static void	smallInsert(std::deque<int> & container, int small, size_t bound);
 
-void PmergeMe::vectorSort(std::vector<int> & container)
+void PmergeMe::dequeSort(std::deque<int> & container)
 {
 	if (container.size() <= 1)
 		return;
 
 	int	oddOne = oddCaseHandle(container);
-	std::vector<std::pair<int, int> >	pairs = pairsMake(container);
-	std::vector<int>	bigs = bigsExtract(pairs);
+	std::deque<std::pair<int, int> >	pairs = pairsMake(container);
+	std::deque<int>	bigs = bigsExtract(pairs);
 
-	PmergeMe::vectorSort(bigs);
+	PmergeMe::dequeSort(bigs);
 
-	std::vector<std::pair<int, int> >	pend = pairsAfterRecursMake(bigs, pairs);
-	std::vector<size_t>	order = indexOrderMake(pend.size());
+	std::deque<std::pair<int, int> >	pend = pairsAfterRecursMake(bigs, pairs);
+	std::deque<size_t>	order = indexOrderMake(pend.size());
 
 	for (size_t i = 0; i < order.size(); ++i)
 	{
@@ -42,7 +42,7 @@ void PmergeMe::vectorSort(std::vector<int> & container)
 	container = bigs;
 }
 
-static int	oddCaseHandle(std::vector<int> & container)
+static int	oddCaseHandle(std::deque<int> & container)
 {
 	if (container.size() % 2 == 0)
 		return -1;
@@ -51,9 +51,9 @@ static int	oddCaseHandle(std::vector<int> & container)
 	return oddOne;
 }
 
-static std::vector<std::pair<int, int> >	pairsMake(std::vector<int> const & container)
+static std::deque<std::pair<int, int> >	pairsMake(std::deque<int> const & container)
 {
-	std::vector<std::pair<int, int> >	pairs;
+	std::deque<std::pair<int, int> >	pairs;
 
 	for (size_t i = 0; i < container.size(); i += 2)
 	{
@@ -65,20 +65,20 @@ static std::vector<std::pair<int, int> >	pairsMake(std::vector<int> const & cont
 	return pairs;
 }
 
-static std::vector<int>	bigsExtract(std::vector<std::pair<int, int> > const & pairs)
+static std::deque<int>	bigsExtract(std::deque<std::pair<int, int> > const & pairs)
 {
-	std::vector<int>	bigs;
+	std::deque<int>	bigs;
 
 	for (size_t i = 0; i < pairs.size(); ++i)
 		bigs.push_back(pairs[i].first);
 	return bigs;
 }
 
-static int	smallFind(std::vector<std::pair<int, int> > & pairs, int big);
+static int	smallFind(std::deque<std::pair<int, int> > & pairs, int big);
 
-static std::vector<std::pair<int, int> >	pairsAfterRecursMake(std::vector<int> const & bigs, std::vector<std::pair<int, int> > & pairs)
+static std::deque<std::pair<int, int> >	pairsAfterRecursMake(std::deque<int> const & bigs, std::deque<std::pair<int, int> > & pairs)
 {
-	std::vector<std::pair<int, int> >	result;
+	std::deque<std::pair<int, int> >	result;
 
 	for (size_t k = 0; k < bigs.size(); ++k)
 	{
@@ -88,7 +88,7 @@ static std::vector<std::pair<int, int> >	pairsAfterRecursMake(std::vector<int> c
 	return result;
 }
 
-static int	smallFind(std::vector<std::pair<int, int> > & pairs, int big)
+static int	smallFind(std::deque<std::pair<int, int> > & pairs, int big)
 {
 	for (size_t i = 0; i < pairs.size(); ++i)
 	{
@@ -102,9 +102,9 @@ static int	smallFind(std::vector<std::pair<int, int> > & pairs, int big)
 	throw std::logic_error("smallFind: no match");
 }
 
-static std::vector<size_t>	indexOrderMake(size_t n)
+static std::deque<size_t>	indexOrderMake(size_t n)
 {
-	std::vector<size_t>	order;
+	std::deque<size_t>	order;
 
 	if (n == 0)
 		return order;
@@ -120,7 +120,7 @@ static std::vector<size_t>	indexOrderMake(size_t n)
 	return order;
 }
 
-static size_t	bigCurrentIndexFind(std::vector<int> const & container, int big)
+static size_t	bigCurrentIndexFind(std::deque<int> const & container, int big)
 {
 	size_t	low = 0;
 	size_t	high = container.size();
@@ -138,7 +138,7 @@ static size_t	bigCurrentIndexFind(std::vector<int> const & container, int big)
 	throw std::logic_error("bigCurrentIndexFind: not found");
 }
 
-static void	smallInsert(std::vector<int> & container, int small, size_t bound)
+static void	smallInsert(std::deque<int> & container, int small, size_t bound)
 {
 	size_t	low = 0;
 	size_t	high = bound;
