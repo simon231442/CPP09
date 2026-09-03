@@ -29,10 +29,10 @@ void PmergeMe::vectorSort(std::vector<int> & container)												//{4, 9, 8, 2
 
 	for (size_t i = 0; i < order.size(); ++i)
 	{
-		int	big = pairsAfterRecurs[order[i]].first;//big corespondant au small a inserer			//big = 7			//8
-		int	small = pairsAfterRecurs[order[i]].second;//small a inserer								//small = 6			//2
-		size_t	bound = bigCurrentIndexFind(bigs, big);//position de big dans bigs					//bound = 0			//2
-		smallInsert(bigs, small, bound);															//{6, 7, 8, 8, 9}	//{2, 6, 7, 8, 8, 9}
+		int	big = pairsAfterRecurs[order[i]].first;//big corespondant au small a inserer			//big = 7			//8					//8						//9
+		int	small = pairsAfterRecurs[order[i]].second;//small a inserer selon jacobstahl			//small = 6			//4					//2						//4
+		size_t	bound = bigCurrentIndexFind(bigs, big);//position de big dans bigs					//bound = 0			//2					//3						//6
+		smallInsert(bigs, small, bound);															//{6, 7, 8, 8, 9}	//{4, 6, 7, 8, 8, 9}//{2, 4, 6, 7, 8, 8, 9}	//{2, 4, 4, 6, 7, 8, 8, 9}
 	}
 
 	if (oddOne != -1)
@@ -137,17 +137,17 @@ static size_t	bigCurrentIndexFind(std::vector<int> const & bigs, int big)
 	throw std::logic_error("bigCurrentIndexFind: not found");
 }
 
-static void	smallInsert(std::vector<int> & bigs, int small, size_t bound)
+static void	smallInsert(std::vector<int> & bigs, int small, size_t bound)//binary search
 {
 	size_t	low = 0;
 	size_t	high = bound;
 
 	while (low < high)
 	{
-		size_t	mid = low + (high - low) / 2;
-		if (bigs[mid] < small)
+		size_t	mid = low + (high - low) / 2;//comme si on coupait un gateau en 2
+		if (small > bigs[mid])				//cas ou small est dans la partie "droite" du gateau
 			low = mid + 1;
-		else
+		else								//"gauche"
 			high = mid;
 	}
 	bigs.insert(bigs.begin() + low, small);

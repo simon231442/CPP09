@@ -15,7 +15,7 @@ SOURCE = main.cpp \
 		PmergeMe_inputParse.cpp \
 		PmergeMe_vectorToDeque.cpp \
 		PmergeMe_vectorSort.cpp \
-		PmergeMe_vectorToDeque.cpp
+		PmergeMe_dequeSort.cpp
 
 ################################################################################
 #                             COMPILER OPTIONS                                 #
