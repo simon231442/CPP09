@@ -1,15 +1,17 @@
-#include <stream>
+#include "RPN.hpp"
+#include <stack>
+#include <sstream>
 
 RPN::RPN() {}
-RPN::RPN(RPN const & src) { void src }
-RPN		RPN::operateur=(RPN const & rhs)
+RPN::RPN(RPN const & src) { (void)src; }
+RPN		RPN::operator=(RPN const & rhs)
 {
 	(void)rhs;
 	return *this;
 }
 RPN::~RPN() {}
 
-static int	oper(std::stack<int> & stack, char op);
+static int oper(std::stack<int> & stack, char op);
 
 int			RPN::evaluate(std::string const & expression)
 {
@@ -18,34 +20,44 @@ int			RPN::evaluate(std::string const & expression)
 	char					op;
 	std::stack<int>			stack;
 
-	while (!iss.empty())
+	while (!iss.fail())
 	{
 		iss >> value;
-		if (iss.fail)
+		if (iss.fail())
 		{
+			iss.clear();
 			iss >> op;
-			if (op == '+' || op == '-' || op == '/' || op == '*')
-				oper(stack, op);
+			if ((op == '+' || op == '-' || op == '/' || op == '*') && oper(stack, op))
+				throw;
 		}
-		stack.push(value);
+		else
+			stack.push(value);
 	}
 	return(stack.top());
 }
 
-int	oper(std::stack<int> & stack, char op)
+static int oper(std::stack<int> & stack, char op)
 {
 	int	valueTop = stack.top();
+
+	if (stack.size() < 2)
+		return 1;
 	stack.pop();
 	if (op == '+')
-		ValueTop += stack.top();
+		valueTop += stack.top();
 	else if (op == '-')
-		ValueTop = stack.top() - valueTop;
+		valueTop = stack.top() - valueTop;
 	else if (op == '/')
-		ValueTop = stack.top() / valueTop;
+	{
+		if (stack.top() == 0)
+			return 1;
+		valueTop = stack.top() / valueTop;
+	}
 	else if (op == '*')
-		ValueTop *= stack.top();
+		valueTop *= stack.top();
 	stack.pop();
 	stack.push(valueTop);
+	return 0;
 }
 
 

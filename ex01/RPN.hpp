@@ -7,10 +7,10 @@ class RPN {
 	private :
 		RPN();
 		RPN(RPN const & src);
-		RPN				operateur=(RPN const & rhs);
+		RPN				operator=(RPN const & rhs);
 		~RPN();
 	public :
-		static int		evalutate(std::string const & expression);
+		static int		evaluate(std::string const & expression);
 };
 
 #endif
