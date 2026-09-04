@@ -7,5 +7,5 @@ bool	BitcoinExchange::valueIsValid(std::string const & value) const
 
 	ss >> val;
 
-	return (!ss.fail() && ss.eof() && val >= 0 && val <= 1000);
+	return (!ss.fail() && ss.eof());
 }

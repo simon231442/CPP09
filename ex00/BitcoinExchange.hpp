@@ -3,9 +3,11 @@
 
 # include <map>
 # include <string>
+# include <sstream>
 # include <cstdlib>
 # include <stdexcept>
 # include <cctype>
+# include <iostream>
 
 class BitcoinExchange {
 public:

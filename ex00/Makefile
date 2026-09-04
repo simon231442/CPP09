@@ -1,48 +1,39 @@
 NAME = btc
 
-################################################################################
-#                               DIRECTORIES                                    #
-################################################################################
-
-OBJ_DIR = obj
-
-################################################################################
-#                                SOURCE FILES                                  #
-################################################################################
-
-SOURCE = BitcoinExchange_constructor.cpp BitcoinExchange_loadDatabase.cpp BitcoinExchange_dateIsValid.cpp BitcoinExchange_valueIsValid.cpp BitcoinExchange_trim.cpp BitcoinExchange_normalizeDate.cpp BitcoinExchange_findClosestRate.cpp BitcoinExchange_printConversion.cpp
-
-################################################################################
-#                             COMPILER OPTIONS                                 #
-################################################################################
+SOURCE = main.cpp \
+		BitcoinExchange_constructor.cpp \
+		BitcoinExchange_loadDatabase.cpp \
+		BitcoinExchange_dateIsValid.cpp \
+		BitcoinExchange_valueIsValid.cpp \
+		BitcoinExchange_trim.cpp \
+		BitcoinExchange_normalizeDate.cpp \
+		BitcoinExchange_findClosestRate.cpp \
+		BitcoinExchange_printConversion.cpp \
+		BitcoinExchange_processInput.cpp
 
 CCPP = c++
-CPPFLAGS = -Wall -Wextra -Werror -std=c++98 
+CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 
+OBJ_DIR = obj
 OBJETS = $(SOURCE:%.cpp=$(OBJ_DIR)/%.o)
 
-################################################################################
-#                              TARGETS & RULES                                 #
-################################################################################
+all: $(NAME)
 
-all : $(NAME)
-
-$(NAME) : $(OBJETS)
+$(NAME): $(OBJETS)
 	$(CCPP) $(CPPFLAGS) $(OBJETS) -o $(NAME)
 
-$(OBJ_DIR)/%.o : %.cpp | $(OBJ_DIR)
+$(OBJ_DIR)/%.o: %.cpp | $(OBJ_DIR)
 	$(CCPP) $(CPPFLAGS) -c $< -o $@
 
-$(OBJ_DIR) :
+$(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-clean :
+clean:
 	rm -rf $(OBJ_DIR)
 
-fclean : clean
+fclean: clean
 	rm -f $(NAME)
 
-re : fclean all
+re: fclean all
 
-.PHONY : all clean fclean re
-
+.PHONY: all clean fclean re

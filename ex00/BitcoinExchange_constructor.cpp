@@ -14,7 +14,3 @@ BitcoinExchange&	BitcoinExchange::operator=(const BitcoinExchange &rhs)
 		this->rates_ = rhs.rates_;
 	return *this;
 }
-
-
-
-

@@ -2,16 +2,13 @@
 
 void		BitcoinExchange::printConversion(std::string const & date, float value) const
 {
-	PriceDatabase::const_iterator	it;
-	float							rate;
+	PriceDatabase::const_iterator	it = findClosestRate(date);
 
-	it = findClosestRate(date);
-	if (this->rates_.end() == it && it->first != this->normalizeDate(date))
+	if (it == this->rates_.end())
 	{
-		std::cerr << "Error: no rate aviable for the date " << date << std::endl;
+		std::cerr << "Error: no rate available for the date " << date << std::endl;
 		return ;
 	}
 
-	std::cout << date << " => " << value << " = " << value * rate;
+	std::cout << date << " => " << value << " = " << value * it->second << std::endl;
 }
-	

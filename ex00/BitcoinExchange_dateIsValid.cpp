@@ -5,6 +5,7 @@ bool		BitcoinExchange::dateIsValid(const std::string &date) const
 	std::istringstream	ss(date);
 	int					year, month, day;
 	char				waste;
+	bool				isLeap;
 
 	if (date.length() != 10 || date[4] != '-' || date[7] != '-')
 		return false;
@@ -19,16 +20,15 @@ bool		BitcoinExchange::dateIsValid(const std::string &date) const
 
 	if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30)
 		return false;
-	
+
 	if (month == 2)
 	{
+		// Une annee bissextile est une annee divisible par 4,
+		// sauf si elle est divisible par 100 (dans ce cas elle
+		// doit aussi etre divisible par 400 pour rester bissextile)
 		isLeap = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 		if (day > (isLeap ? 29 : 28))
 			return false;
 	}
-	return false;
+	return true;
 }
-
-// Une annee bissextile est une annee divisible par 4,
-// sauf si elle est divisible par 100 (dans ce cas elle
-// doit aussi etre divisible par 400 pour rester bissextile)
