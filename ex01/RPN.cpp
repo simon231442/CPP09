@@ -22,16 +22,17 @@ int			RPN::evaluate(std::string const & expression)
 
 	while (!iss.fail())
 	{
-		iss >> value;
-		if (iss.fail())
-		{
-			iss.clear();
-			iss >> op;
-			if ((op == '+' || op == '-' || op == '/' || op == '*') && oper(stack, op))
-				throw;
-		}
+		op = iss.peek();
+		if ((op == '+' || op == '-' || op == '/' || op == '*') && oper(stack, op))
+			throw;
+		iss.ignore();
 		else
+		{
+			iss >> value;
+			if (iss.fail())
+				throw;
 			stack.push(value);
+		}
 	}
 	return(stack.top());
 }
@@ -49,7 +50,7 @@ static int oper(std::stack<int> & stack, char op)
 		valueTop = stack.top() - valueTop;
 	else if (op == '/')
 	{
-		if (stack.top() == 0)
+		if (valueTop == 0)
 			return 1;
 		valueTop = stack.top() / valueTop;
 	}

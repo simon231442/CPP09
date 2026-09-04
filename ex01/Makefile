@@ -18,7 +18,7 @@ SOURCE = main.cpp \
 ################################################################################
 
 CCPP = c++
-CPPFLAGS = -Wall -Wextra -Werror -std=c++98 
+CPPFLAGS = -Wall -Wextra -Werror -g -std=c++98 
 
 OBJETS = $(SOURCE:%.cpp=$(OBJ_DIR)/%.o)
 
